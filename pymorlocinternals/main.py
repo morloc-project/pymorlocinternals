@@ -35,14 +35,11 @@ def serialize_int(x, schema):
 
 
 def serialize_str(x, schema):
-    return '"{}"'.format(x)
+    return json.dumps(x)
 
 
 def serialize_bool(x, schema):
-    if x:
-        return "true"
-    else:
-        return "false"
+    return json.dumps(x)
 
 
 dispatch = dict(

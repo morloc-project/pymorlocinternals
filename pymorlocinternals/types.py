@@ -1,4 +1,4 @@
-def mlc_list(*args):
+def mlc_list(arg):
   """
   Helper function for building list types
 
@@ -6,9 +6,9 @@ def mlc_list(*args):
   the named, heterogenous lists of python. So `mlc_list(mlc_integer)` would be
   the python3 version of the Haskell type `[Int]`.
 
-  @param *args The type parameter for a list
+  @param args The type parameter for a list
   """
-  return ("list", [*args])
+  return ("list", arg)
 
 
 def mlc_tuple(*args):
