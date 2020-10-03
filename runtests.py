@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 
-import pymorlocinternals
+from pymorlocinternals.main import (mlc_serialize, mlc_deserialize) 
+from pymorlocinternals.types import *
+import unittest
 
-class TestFoo(unittest.TestCase):
-    def test_foo(self):
-        self.assertEqual(1, 1)
+class TestAll(unittest.TestCase):
+    def test_primitives(self):
+        self.assertEqual(mlc_serialize(42, mlc_int), "42")
+        self.assertEqual(mlc_serialize(-42, mlc_int), "-42")
+        self.assertEqual(mlc_serialize(-42, mlc_float), "-42")
 
 if __name__ == "__main__":
     unittest.main()
