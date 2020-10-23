@@ -22,7 +22,7 @@ def serialize_record(x, schema):
     entries = []
     for (k, t) in schema.items():
         f = dispatch[t[0]]
-        entries.append("{}={}".format(k, f(x[k], t[1])))
+        entries.append("\"{}\":{}".format(k, f(x[k], t[1])))
     return "{{{}}}".format(",".join(entries))
 
 
