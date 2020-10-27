@@ -46,6 +46,7 @@ dispatch = dict(
     list=serialize_list,
     tuple=serialize_tuple,
     record=serialize_record,
+    dict=serialize_record,
     float=serialize_float,
     int=serialize_int,
     str=serialize_str,
