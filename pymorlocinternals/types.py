@@ -1,5 +1,5 @@
 def mlc_list(arg):
-  """
+    """
   Helper function for building list types
 
   The "list" here is a homogenous vector, like the Haskell or lisp list, not
@@ -8,33 +8,42 @@ def mlc_list(arg):
 
   @param args The type parameter for a list
   """
-  return ("list", arg)
+    return ("list", arg)
 
 
 def mlc_tuple(*args):
-  """
+    """
   Helper function for building tuple types
 
   @param *args The type parameter for the tuple
   """
-  return ("tuple", [*args])
+    return ("tuple", [*args])
 
 
 def mlc_record(**kwargs):
-  """
+    """
   Helper function for building record types
 
   @param **kwargs The keyword arguments for the record
   """
-  return ("record", dict(**args))
+    return ("record", dict(**args))
+
+
+def mlc_object(f, **kwargs):
+    """
+  Helper function for building object types
+
+  @param **kwargs The keyword arguments for the record
+  """
+    return (f, dict(**kwargs))
 
 
 mlc_int = ("int", None)
 
 mlc_float = ("float", None)
 
-mlc_str = ('str', None)
+mlc_str = ("str", None)
 
-mlc_bool = ('bool', None)
+mlc_bool = ("bool", None)
 
-mlc_null = ('null', None)
+mlc_null = ("null", None)

@@ -22,7 +22,7 @@ def serialize_record(x, schema):
     entries = []
     for (k, t) in schema.items():
         f = dispatch[t[0]]
-        entries.append("\"{}\":{}".format(k, f(x[k], t[1])))
+        entries.append('"{}":{}'.format(k, f(x[k], t[1])))
     return "{{{}}}".format(",".join(entries))
 
 
@@ -55,8 +55,46 @@ dispatch = dict(
 
 
 def mlc_serialize(x, schema):
-    return dispatch[schema[0]](x, schema[1])
+    if type(schema[0]) == str:
+        return dispatch[schema[0]](x, schema[1])
+    else:
+        # Is the label is not a string, then it is a constructor,
+        # so the data should an object
+        return serialize_record(x.__dict__, schema[1])
 
 
-def mlc_deserialize(x, t):
-    return json.loads(x)
+def deserialize_list(xs, schema):
+    deserialize = dispatch_deserialize[schema[0]]
+    return [deserialize(x, schema[1]) for x in xs]
+
+
+def deserialize_tuple(xs, schema):
+    return tuple([dispatch_deserialize[s[0]](x, s[1])  for (x,s) in zip(xs, schema)])
+
+
+def deserialize_record(d0, schema):
+    d = dict()
+    for (k, v) in schema.items():
+        deserializer = dispatch_deserialize[v[0]]
+        d[k] = deserializer(d0[k], v[1])
+    return d
+
+
+dispatch_deserialize = dict(
+    list=deserialize_list,
+    tuple=deserialize_tuple,
+    record=deserialize_record,
+    dict=deserialize_record,
+    float=lambda x, s: float(x),
+    int=lambda x, s: int(x),
+    str=lambda x, s: str(x),
+    bool=lambda x, s: bool(x),
+)
+
+
+def mlc_deserialize(json_str, schema):
+    x = json.loads(json_str)
+    if type(schema[0]) == str:
+        return dispatch_deserialize[schema[0]](x, schema[1])
+    else:
+        return schema[0](**deserialize_record(x, schema[1]))

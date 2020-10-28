@@ -10,6 +10,14 @@ import unittest
 # written in custom C++ with full type checking (like in the rmorlocinternals
 # package for R).
 
+class PersonObj:
+  def __init__(self, name, age):
+    self.name = name 
+    self.age = age 
+
+  def __eq__(self, other):
+    return self.__dict__ == other.__dict__
+
 
 class TestAll(unittest.TestCase):
     def test_int(self):
@@ -84,6 +92,20 @@ class TestAll(unittest.TestCase):
         self.assertEqual(
             mlc_deserialize('[[1,2],"foo"]', mlc_tuple(mlc_list(mlc_int), mlc_str)),
             ([1, 2], "foo"),
+        )
+
+    def test_object(self):
+        person = PersonObj(name="Alice", age=4)
+
+        # serialization
+        self.assertEqual(
+            mlc_serialize(person, schema=mlc_object(PersonObj, name=mlc_str, age=mlc_int)),
+            '{"name":"Alice","age":4}',
+        )
+        # deserialization
+        self.assertEqual(
+            mlc_deserialize('{"name":"Alice","age":4}', mlc_object(PersonObj, name=mlc_str, age=mlc_int)),
+            person
         )
 
 if __name__ == "__main__":
