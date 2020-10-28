@@ -85,10 +85,10 @@ dispatch_deserialize = dict(
     tuple=deserialize_tuple,
     record=deserialize_record,
     dict=deserialize_record,
-    float=lambda x, s: float(x),
-    int=lambda x, s: int(x),
-    str=lambda x, s: str(x),
-    bool=lambda x, s: bool(x),
+    float=lambda x, s: x,
+    int=lambda x, s: x,
+    str=lambda x, s: x,
+    bool=lambda x, s: x,
 )
 
 
