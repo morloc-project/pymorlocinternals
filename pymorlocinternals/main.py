@@ -41,17 +41,20 @@ def serialize_str(x, schema):
 def serialize_bool(x, schema):
     return json.dumps(x)
 
+def serialize_none(x, schema):
+    return json.dumps(None)
 
-dispatch = dict(
-    list=serialize_list,
-    tuple=serialize_tuple,
-    record=serialize_record,
-    dict=serialize_record,
-    float=serialize_float,
-    int=serialize_int,
-    str=serialize_str,
-    bool=serialize_bool,
-)
+dispatch = { 
+    "list" : serialize_list,
+    "tuple" : serialize_tuple,
+    "record" : serialize_record,
+    "dict" : serialize_record,
+    "float" : serialize_float,
+    "int" : serialize_int,
+    "str" : serialize_str,
+    "bool" : serialize_bool,
+    "None" : serialize_none,
+  }
 
 
 def mlc_serialize(x, schema):
@@ -80,16 +83,17 @@ def deserialize_record(d0, schema):
     return d
 
 
-dispatch_deserialize = dict(
-    list=deserialize_list,
-    tuple=deserialize_tuple,
-    record=deserialize_record,
-    dict=deserialize_record,
-    float=lambda x, s: x,
-    int=lambda x, s: x,
-    str=lambda x, s: x,
-    bool=lambda x, s: x,
-)
+dispatch_deserialize = {
+    "list"   : deserialize_list,
+    "tuple"  : deserialize_tuple,
+    "record" : deserialize_record,
+    "dict"   : deserialize_record,
+    "float"  : lambda x, _: x,
+    "int"    : lambda x, _: x,
+    "str"    : lambda x, _: x,
+    "bool"   : lambda x, _: x,
+    "None"   : None
+}
 
 
 def mlc_deserialize(json_str, schema):

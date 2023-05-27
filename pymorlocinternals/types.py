@@ -26,7 +26,7 @@ def mlc_record(**kwargs):
 
   @param **kwargs The keyword arguments for the record
   """
-    return ("record", dict(**args))
+    return ("record", dict(**kwargs))
 
 
 def mlc_object(f, **kwargs):
