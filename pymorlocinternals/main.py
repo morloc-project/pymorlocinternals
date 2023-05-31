@@ -1,4 +1,5 @@
 import json
+import sys
 
 """
 ("tuple", [("float", None), ("record", OrderedDict(a=("float", None)))])
@@ -97,7 +98,11 @@ dispatch_deserialize = {
 
 
 def mlc_deserialize(json_str, schema):
-    x = json.loads(json_str)
+    try:
+        x = json.loads(json_str)
+    except json.JSONDecodeError:
+        print(f"Python deserialization error in pymorlocinternals. Failed to deserialized type {type(json_str)} with value: {str(json_str)}", sys.stderr)
+        sys.exit(1)
     if type(schema[0]) == str:
         return dispatch_deserialize[schema[0]](x, schema[1])
     else:
