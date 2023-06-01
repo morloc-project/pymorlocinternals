@@ -100,8 +100,10 @@ dispatch_deserialize = {
 def mlc_deserialize(json_str, schema):
     try:
         x = json.loads(json_str)
-    except json.JSONDecodeError:
+    except json.JSONDecodeError as e:
         print(f"Python deserialization error in pymorlocinternals. Failed to deserialized type {type(json_str)} with value: {str(json_str)}", sys.stderr)
+        print(f"Using schema: {str(schema)}", sys.stderr)
+        print(f"JSONDecodeError: {str(e)}", sys.stderr)
         sys.exit(1)
     if type(schema[0]) == str:
         return dispatch_deserialize[schema[0]](x, schema[1])
