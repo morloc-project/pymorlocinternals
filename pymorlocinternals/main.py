@@ -22,8 +22,16 @@ def serialize_tuple(x, schema):
 def serialize_record(x, schema):
     entries = []
     for (k, t) in schema.items():
-        f = dispatch[t[0]]
-        entries.append('"{}":{}'.format(k, f(x[k], t[1])))
+        try:
+            f = dispatch[t[0]]
+            entries.append('"{}":{}'.format(k, f(x[k], t[1])))
+        except:
+            print(f"Mismatch found between serial specification and actual serialized data.", file = sys.stderr)
+            print(f"This may be caused by a sourced function that is not following its type signature.", file = sys.stderr)
+            print(f"  k ({type(k)}): {str(k)}", file = sys.stderr)
+            print(f"  t ({type(t)}): {str(t)}", file = sys.stderr)
+            print(f"  x ({type(x)}): {str(x)}", file = sys.stderr)
+            sys.exit(1)
     return "{{{}}}".format(",".join(entries))
 
 
@@ -101,9 +109,12 @@ def mlc_deserialize(json_str, schema):
     try:
         x = json.loads(json_str)
     except json.JSONDecodeError as e:
-        print(f"Python deserialization error in pymorlocinternals. Failed to deserialized type {type(json_str)} with value: {str(json_str)}", sys.stderr)
-        print(f"Using schema: {str(schema)}", sys.stderr)
-        print(f"JSONDecodeError: {str(e)}", sys.stderr)
+        print(f"Python deserialization error in pymorlocinternals. Failed to deserialized type {type(json_str)} with value: {str(json_str)}", file=sys.stderr)
+        print(f"Using schema: {str(schema)}", file=sys.stderr)
+        print(f"JSONDecodeError: {str(e)}", file=sys.stderr)
+        sys.exit(1)
+    except:
+        print(f"Failed to deserialize '{json_str}' of type '{type(json_str)}'", file=sys.stderr)
         sys.exit(1)
     if type(schema[0]) == str:
         return dispatch_deserialize[schema[0]](x, schema[1])
